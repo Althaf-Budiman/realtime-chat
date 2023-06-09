@@ -20,7 +20,7 @@ class SendMessage extends Component
         $this->receiverInstance = $receiver;
     }
 
-    public function sendMessage() 
+    public function sendMessage()
     {
         if ($this->body == null) {
             return null;
@@ -34,6 +34,10 @@ class SendMessage extends Component
 
             $this->selectedConversation->last_time_message = $createdMessage->created_at;
             $this->selectedConversation->save();
+
+            $this->emitTo('chat.chatbox', 'pushMessage', $createdMessage->id);
+            $this->emitTo('chat.chat-list', 'refresh');
+            $this->reset('body');
         }
     }
 
